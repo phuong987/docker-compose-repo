@@ -1,0 +1,17 @@
+---
+services:
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - AUTO_UPDATE=false #optional
+      - RUN_OPTS= #optional
+    volumes:
+      - /Users/macos/jackett_volume/jackett/data:/config
+      - /Users/macos/jackett_volume/blackhole:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped

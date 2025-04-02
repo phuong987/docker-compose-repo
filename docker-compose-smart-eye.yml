@@ -1,0 +1,41 @@
+services:
+  smart-eye-0:
+    image: smart-eye-image
+    container_name: smart-eye-container
+    environment:
+      - REFRESH_TOKEN_EXPIRY=3m
+      - ACCESS_TOKEN_EXPIRY=2m
+      - SIGNATURE_ALGORITHM=HS256
+      - POSTGRES_IP=172.22.0.101
+    ports:
+      - 8069:8080
+    networks:
+      internal-net:
+        ipv4_address: 172.22.0.100
+
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgresql}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - 5432:5432
+    networks:
+      internal-net:
+        ipv4_address: 172.22.0.101
+    restart: unless-stopped
+
+networks:
+  internal-net:
+    name: internal-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+
+volumes:
+    postgres:
